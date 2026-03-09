@@ -250,13 +250,19 @@ function initScrollAnimations() {
     })
         .from(".legacy-text h2", { y: 20, opacity: 0, duration: 0.8 }, "-=1")
         .from(".legacy-text p", { y: 20, opacity: 0, duration: 0.8 }, "-=0.6")
-        .from(".memory-node", {
-            scale: 0,
-            opacity: 0,
-            duration: 0.5,
-            stagger: 0.2,
-            ease: "back.out(2)"
-        }, "-=0.4");
+        .fromTo(".memory-node",
+            {
+                scale: 0,
+                autoAlpha: 0,
+            },
+            {
+                scale: 1,
+                autoAlpha: 1,
+                duration: 0.5,
+                stagger: 0.2,
+                ease: "back.out(2)",
+                clearProps: "all"
+            }, "-=0.4");
 
     // Memory Node Interactive Hover Logic
     const memoryNodes = document.querySelectorAll('.memory-node');
@@ -268,10 +274,25 @@ function initScrollAnimations() {
             popup.innerText = `"${quote}"`;
             popup.style.opacity = '1';
 
-            // Position popup slightly above the node
+            // Position popup relative to the hovered node within the section
             const rect = e.target.getBoundingClientRect();
-            popup.style.left = `${rect.left + window.scrollX - 40}px`;
-            popup.style.top = `${rect.top + window.scrollY - 60}px`;
+            const containerRect = document.querySelector('.legacy-content').getBoundingClientRect();
+
+            // Check if the node is on the left half or right half of the screen
+            const isLeftHalf = rect.left < (window.innerWidth / 2);
+
+            // Align vertically to the middle of the node
+            popup.style.top = `${rect.top - containerRect.top + (rect.height / 2)}px`;
+
+            if (isLeftHalf) {
+                // Node is on the left -> render popup specifically to its right
+                popup.style.left = `${rect.right - containerRect.left + 15}px`;
+                popup.style.transform = `translateY(-50%)`;
+            } else {
+                // Node is on the right -> render popup specifically to its left
+                popup.style.left = `${rect.left - containerRect.left - 15}px`;
+                popup.style.transform = `translate(-100%, -50%)`;
+            }
         });
 
         node.addEventListener('mouseleave', () => {

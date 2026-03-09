@@ -667,8 +667,8 @@ nav a:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
     z-index: 2;
+    width: 100%;
 }
 
 .reactor-container {
@@ -778,7 +778,9 @@ nav a:hover {
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 10;
-    white-space: nowrap;
+    text-align: center;
+    max-width: 90vw;
+    white-space: normal;
     letter-spacing: 1px;
 }
 
