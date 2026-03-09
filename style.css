@@ -1,0 +1,923 @@
+:root {
+    --bg-color: #030303;
+    --text-main: #f0f0f0;
+    --iron-red: #c62828;
+    --iron-gold: #ffc107;
+    --arc-blue: #00e5ff;
+    --arc-glow: rgba(0, 229, 255, 0.4);
+    --card-bg: #0a0a0a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Courier New', Courier, monospace;
+    /* Tech feel */
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: var(--bg-color);
+    position: sticky;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid var(--iron-red);
+    transition: transform 0.3s ease-in-out;
+}
+
+.navbar.hidden-nav {
+    transform: translateY(-100%);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: var(--iron-gold);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo span {
+    color: var(--text-main);
+}
+
+.nav-logo-target {
+    width: 40px;
+    /* Match HTML change */
+    height: 40px;
+    /* Match HTML change */
+    opacity: 0;
+    /* Hidden initially, GSAP will move loader-arc here and show this */
+    border-radius: 50%;
+    mix-blend-mode: screen;
+    clip-path: circle(48% at 50% 50%);
+    -webkit-mask-image: radial-gradient(circle, black 60%, transparent 75%);
+    mask-image: radial-gradient(circle, black 60%, transparent 75%);
+}
+
+/* Loader */
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader-arc {
+    width: 350px;
+    /* Make the arc reactor big in loader */
+    height: 350px;
+    /* Rotation handled dynamically by GSAP */
+    border-radius: 50%;
+    mix-blend-mode: screen;
+    clip-path: circle(48% at 50% 50%);
+    -webkit-mask-image: radial-gradient(circle, black 60%, transparent 75%);
+    mask-image: radial-gradient(circle, black 60%, transparent 75%);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--text-main);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+nav a:hover {
+    color: var(--arc-blue);
+    text-shadow: 0 0 10px var(--arc-glow);
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid #222;
+    overflow: hidden;
+    margin-top: 0;
+    /* Align perfectly with top */
+}
+
+.hero-bg-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    /* behind contents */
+}
+
+.hero-img-back,
+.avengers-logo-front {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-img-back {
+    object-fit: cover;
+}
+
+.avengers-logo-front {
+    object-fit: contain;
+    z-index: 110;
+}
+
+.hero-img-back {
+    opacity: 0;
+    /* Initially hidden */
+    z-index: 120;
+    /* Mix blend mode drops the black background out. This isolates the figure and allows drop shadow to stick to the figure's pixels */
+    mix-blend-mode: screen;
+    /* -webkit-filter: drop-shadow(0 0 35px rgba(0, 229, 255, 0.8));
+    filter: drop-shadow(0 0 35px rgba(0, 229, 255, 0.8)); */
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    z-index: 115;
+    /* Put this BEHIND the Iron Man back image (120) but ABOVE Avengers (110) */
+    /* above backgrounds */
+}
+
+.glitch {
+    font-size: 6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--text-main);
+    text-shadow: 3px 3px 0 var(--iron-red), -3px -3px 0 var(--iron-gold);
+    letter-spacing: 8px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #999;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+/* Sections */
+.details-section {
+    padding: 100px 10%;
+    border-top: 1px solid #1a1a1a;
+}
+
+.alt-bg {
+    background-color: var(--card-bg);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: var(--iron-gold);
+    margin-bottom: 50px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    border-left: 6px solid var(--iron-red);
+    padding-left: 20px;
+    text-shadow: 0 0 10px rgba(255, 193, 7, 0.2);
+}
+
+/* About Section - Split Screen Sticky Layout */
+.tony-stark-section {
+    background-color: var(--bg-color);
+    position: relative;
+    padding: 0;
+    /* Removing default padding for full bleed layout */
+    border-top: 1px solid #1a1a1a;
+}
+
+.stark-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.stark-image-col {
+    width: 50%;
+    position: relative;
+}
+
+.stark-image-wrapper {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+.stark-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    filter: brightness(0.7) contrast(1.1);
+}
+
+.image-overlay-text {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.image-overlay-text span:first-child {
+    color: var(--iron-gold);
+    font-size: 1.5rem;
+    letter-spacing: 5px;
+    font-weight: bold;
+}
+
+.image-overlay-text span:last-child {
+    color: #fff;
+    font-size: 3rem;
+    letter-spacing: 15px;
+    opacity: 0.3;
+}
+
+.stark-content-col {
+    width: 50%;
+    padding: 100px 8%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(90deg, #000 0%, #0a0a0a 100%);
+}
+
+.stark-title {
+    font-size: 4rem;
+    line-height: 1.1;
+    color: var(--text-main);
+    text-transform: uppercase;
+    margin-bottom: 80px;
+    letter-spacing: 2px;
+    border-left: 8px solid var(--iron-red);
+    padding-left: 30px;
+}
+
+.stark-bio-box {
+    margin-bottom: 60px;
+    padding-left: 35px;
+    border-left: 1px solid #333;
+    position: relative;
+    transition: all 0.4s ease;
+}
+
+.stark-bio-box:hover {
+    border-left-color: var(--arc-blue);
+}
+
+.stark-bio-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -6px;
+    width: 11px;
+    height: 11px;
+    background-color: #333;
+    border-radius: 50%;
+    transition: all 0.4s ease;
+}
+
+.stark-bio-box:hover::before {
+    background-color: var(--arc-blue);
+    box-shadow: 0 0 15px var(--arc-blue);
+}
+
+.bio-year {
+    color: var(--iron-gold);
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.stark-bio-box p {
+    color: #b0b0b0;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.stark-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 40px;
+    border: 1px solid var(--arc-blue);
+    color: var(--arc-blue);
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 2px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    background: transparent;
+    cursor: pointer;
+}
+
+.stark-btn:hover {
+    background: rgba(0, 229, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+}
+
+/* Responsive adjustment for Tony stark split layout */
+@media (max-width: 960px) {
+    .stark-container {
+        flex-direction: column;
+    }
+
+    .stark-image-col,
+    .stark-content-col {
+        width: 100%;
+    }
+
+    .stark-image-wrapper {
+        height: 60vh;
+        position: relative;
+        /* Remove sticky on mobile */
+    }
+
+    .stark-title {
+        font-size: 2.5rem;
+    }
+}
+
+/* Accordion Suits Gallery */
+.suits-accordion {
+    display: flex;
+    width: 100%;
+    height: 700px;
+    gap: 15px;
+    padding: 20px 0;
+}
+
+.suit-item {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+    border-radius: 20px;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.suit-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    filter: brightness(0.6) grayscale(30%);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.suit-item.active {
+    flex: 5;
+    box-shadow: 0 10px 40px rgba(0, 229, 255, 0.3);
+}
+
+.suit-item.active img {
+    filter: brightness(1) grayscale(0%);
+}
+
+.suit-item:hover:not(.active) img {
+    filter: brightness(0.85) grayscale(10%);
+}
+
+/* Info Overlay */
+.suit-info-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.4) 30%, rgba(0, 0, 0, 0) 100%);
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.5s ease-out 0.2s;
+    /* Delayed fade in */
+    pointer-events: none;
+    /* Let clicks pass through to the item */
+}
+
+.suit-item.active .suit-info-overlay {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.suit-info-overlay h3 {
+    font-size: 3rem;
+    color: var(--text-main);
+    letter-spacing: 5px;
+    margin-bottom: 15px;
+    text-shadow: 0 0 20px rgba(0, 229, 255, 0.8);
+    white-space: nowrap;
+    border-bottom: 2px solid var(--iron-gold);
+    display: inline-block;
+    padding-bottom: 10px;
+    width: fit-content;
+}
+
+.suit-details {
+    max-width: 600px;
+}
+
+.suit-details p {
+    font-size: 1.1rem;
+    color: #e0e0e0;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.suit-stats {
+    display: flex;
+    gap: 30px;
+}
+
+.suit-stats span {
+    font-weight: bold;
+    color: var(--iron-gold);
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 15px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+/* Responsive adjustments for Accordion */
+@media (max-width: 900px) {
+    .suits-accordion {
+        height: 500px;
+    }
+
+    .suit-info-overlay h3 {
+        font-size: 2rem;
+    }
+
+    .suit-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Tech Grid Section */
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    padding: 20px 0;
+    position: relative;
+}
+
+/* Connecting lines behind nodes */
+.tech-grid::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    width: 90%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.3), transparent);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.tech-node {
+    background: rgba(10, 10, 10, 0.6);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 8px;
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(5px);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+/* Holographic scanline effect */
+.tech-node::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to bottom, transparent, rgba(0, 229, 255, 0.1), transparent);
+    transition: top 0.6s ease;
+    pointer-events: none;
+}
+
+.tech-node:hover {
+    transform: translateY(-10px);
+    border-color: var(--arc-blue);
+    box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.1), 0 10px 30px rgba(0, 229, 255, 0.2);
+}
+
+.tech-node:hover::after {
+    top: 200%;
+}
+
+.node-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 30px auto;
+    border: 2px solid var(--iron-gold);
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+}
+
+.node-icon::before {
+    content: '';
+    position: absolute;
+    width: 130%;
+    height: 130%;
+    border: 2px dashed rgba(0, 229, 255, 0.5);
+    border-radius: 50%;
+    animation: rotate 10s linear infinite;
+    opacity: 0.5;
+}
+
+.tech-node:hover .node-icon {
+    box-shadow: 0 0 20px var(--iron-gold);
+    transform: scale(1.1);
+}
+
+.tech-node:hover .node-icon::before {
+    animation-duration: 3s;
+    /* Speeds up on hover */
+    opacity: 1;
+    border-color: var(--arc-blue);
+}
+
+.core-glow {
+    width: 20px;
+    height: 20px;
+    background-color: var(--arc-blue);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--arc-blue);
+    transition: all 0.3s ease;
+}
+
+.tech-node:hover .core-glow {
+    background-color: #fff;
+    box-shadow: 0 0 30px #fff, 0 0 50px var(--arc-blue);
+}
+
+.tech-node strong {
+    display: block;
+    color: var(--text-main);
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+    transition: color 0.3s ease;
+}
+
+.tech-node:hover strong {
+    color: var(--arc-blue);
+    text-shadow: 0 0 15px var(--arc-blue);
+}
+
+.tech-node p {
+    color: #a0a0a0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* SEC 3: The Arc Reactor Legacy */
+.legacy-section {
+    min-height: 100vh;
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 100px 5%;
+}
+
+.legacy-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.reactor-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin-bottom: 50px;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.reactor-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 0 30px rgba(0, 229, 255, 0.6));
+    -webkit-mask-image: radial-gradient(circle, black 40%, transparent 70%);
+    mask-image: radial-gradient(circle, black 40%, transparent 70%);
+}
+
+.reactor-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140%;
+    height: 140%;
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 1;
+    opacity: 0.5;
+    animation: pulse-reactor 4s infinite alternate;
+}
+
+.legacy-text {
+    text-align: center;
+    max-width: 800px;
+}
+
+.legacy-text h2 {
+    font-size: 3.5rem;
+    color: var(--iron-gold);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    text-shadow: 0 0 15px rgba(255, 193, 7, 0.3);
+}
+
+.legacy-text p {
+    font-size: 1.5rem;
+    color: #ccc;
+    line-height: 1.6;
+    font-style: italic;
+}
+
+/* Floating interactive memory nodes */
+.memory-node {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: var(--arc-blue);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--arc-blue);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 3;
+}
+
+.memory-node:hover {
+    transform: scale(1.5);
+    box-shadow: 0 0 25px var(--arc-blue), 0 0 40px #fff;
+}
+
+.memory-1 {
+    top: 15%;
+    left: 10%;
+}
+
+.memory-2 {
+    top: 35%;
+    right: 15%;
+}
+
+.memory-3 {
+    bottom: 25%;
+    left: 15%;
+}
+
+.memory-4 {
+    bottom: 10%;
+    right: 20%;
+}
+
+.quote-popup {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid var(--arc-blue);
+    padding: 15px 30px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1.3rem;
+    font-style: italic;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+    white-space: nowrap;
+    letter-spacing: 1px;
+}
+
+@keyframes pulse-reactor {
+    0% {
+        transform: translate(-50%, -50%) scale(0.9);
+        opacity: 0.3;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+/* SEC 1: The Snap Cinematic Finale */
+.finale-section {
+    height: 200vh;
+    /* Extra height for pinned scroll animation */
+    position: relative;
+    background-color: #000;
+    overflow: hidden;
+}
+
+.finale-img-container {
+    position: fixed;
+    /* Fixed position while pinned */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    opacity: 0;
+    /* Started hidden, GSAP will show */
+    pointer-events: none;
+    /* Ignore clicks */
+}
+
+.snap-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.5) contrast(1.2);
+    transform: scale(1.2);
+    /* Started zoomed in */
+}
+
+.stones-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    z-index: 2;
+    mix-blend-mode: overlay;
+    opacity: 0;
+}
+
+.finale-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.snap-text {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    font-size: clamp(3rem, 8vw, 8rem);
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 900;
+    line-height: 1.2;
+    text-align: center;
+    letter-spacing: clamp(5px, 2vw, 15px);
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.4), 0 0 150px var(--iron-gold);
+    opacity: 0;
+    pointer-events: none;
+    width: 100%;
+    padding: 0 20px;
+}
+
+/* Footer */
+footer {
+    background-color: #000;
+    text-align: center;
+    padding: 50px 20px;
+    border-top: 2px solid var(--iron-red);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+footer p {
+    font-size: 1.3rem;
+    font-style: italic;
+    color: #777;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.copyright {
+    font-size: 0.85rem !important;
+    font-style: normal !important;
+    color: #444 !important;
+    margin-top: 10px;
+    letter-spacing: 1px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .glitch {
+        font-size: 3.5rem;
+        letter-spacing: 4px;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+    }
+
+    .details-section {
+        padding: 60px 5%;
+    }
+
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+}
