@@ -951,6 +951,9 @@ footer p {
     .suit-item:nth-child(3) img {
         object-position: center 20%;
     }
+    .suit-item:nth-child(2) img {
+        object-position: center 10%;
+    }
 
     /* Tony Stark sticky mobile section */
     /* Tony Stark sticky mobile section */
