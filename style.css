@@ -922,4 +922,28 @@ footer p {
     .grid-container {
         grid-template-columns: 1fr;
     }
+
+    .suits-accordion {
+        flex-direction: column;
+        height: 80vh;
+        /* Better vertical space allocation */
+        min-height: 600px;
+    }
+
+    .suit-item {
+        width: 100%;
+    }
+
+    /* Adjust info overlay for smaller vertical space */
+    .suit-info-overlay {
+        padding: 20px 15px;
+    }
+
+    .suit-info-overlay h3 {
+        font-size: 1.5rem;
+    }
+
+    .suit-info-overlay p {
+        font-size: 0.9rem;
+    }
 }
