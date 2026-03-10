@@ -947,6 +947,11 @@ footer p {
         font-size: 0.9rem;
     }
 
+    /* Shift 3rd suit (Hulkbuster) image up on mobile so its head isn't cut off */
+    .suit-item:nth-child(3) img {
+        object-position: center 20%;
+    }
+
     /* Tony Stark sticky mobile section */
     /* Tony Stark sticky mobile section */
     .stark-container {
